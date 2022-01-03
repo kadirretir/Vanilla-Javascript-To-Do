@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <!-- FONT AWESOME CDN -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+    <title>To-Do List App</title>
+</head>
+
+<body>
+    <header id="header">
+        <div class="middleHeader">
+            <div class="middleHeaderFonts">
+                <h1>KADİR ÜRETİR'S</h1>
+                <h2>TO-DO LIST</h2>
+            </div>
+        </div>
+    </header>
+
+    <section id="todo-section">
+        <div class="todo-intro">
+            <h2>JAVASCRIPT TO-DO LIST</h2>
+            <p>CREATED BY KADIR URETIR</p>
+        </div>
+        <div class="to-do">
+            <div class="top-to-do">
+                <input type="text" id="inputValue" placeholder="Add To Do" />
+                <input type="text" id="secretInput" />
+                <button id="getInput" onclick="createItem()">Add</button>
+                <button id="editInput">Edit</button>
+            </div>
+            <div class="todo-list">
+                <div id="showInfo"></div>
+                <ul id="ul-list"></ul>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        "use strict";
+        let currentArr = [];
+        let inputValue = document.getElementById("inputValue");
+        let editButton = document.getElementById("editInput");
+        let getInputButton = document.getElementById("getInput");
+        let getSecretInput = document.getElementById("secretInput");
+        let getUlList = document.getElementById("ul-list");
+        function refreshItems() {
+            let ulOfLi = document.getElementById("ul-list");
+            let putLi = "";
+            currentArr.forEach((elem, index) => {
+                putLi += `<li class="li-items">
+                            <p>${elem}</p>
+                            <button class="li-buttons" onclick=(editItem(${index}))><i class="fas fa-edit"></i></button>
+                            <button class="li-buttons" onclick=(deleteItem(${index}))><i class="fas fa-trash-alt"></i></button>
+                        </li> `
+            })
+            ulOfLi.innerHTML = putLi;
+            if (currentArr.length === 0) {
+                const getInfoDiv = document.getElementById("showInfo");
+                const createdNode = document.createElement("h2");
+                getInfoDiv.appendChild(createdNode);
+                createdNode.innerHTML = "*You have nothing to do yet.";
+                createdNode.classList.add("absentInfo");
+
+            } else {
+                document.getElementById("showInfo").innerHTML = "";
+            }
+        }
+
+        function createItem() {
+            let inputValue = document.getElementById("inputValue").value;
+            if (inputValue === "") {
+                alert("You must enter something...");
+            } else if (/^\s/.test(inputValue)) {
+                alert("You must enter something...");
+            } else {
+                currentArr.push(inputValue);
+                refreshItems();
+            }
+            document.getElementById("inputValue").value = "";
+        }
+
+        function deleteItem(index) {
+            currentArr.splice(index, 1)
+            refreshItems();
+        }
+
+        function editItem(value) {
+            getSecretInput.value = value;
+            inputValue.value = currentArr[value];
+            getInputButton.style.display = "none";
+            editButton.style.display = "block";
+            const getSelectedLiItem = getUlList.children[value];
+            getSelectedLiItem.style.backgroundColor = "#dddddd";
+
+            
+            function afterClick() {
+                let id = getSecretInput.value;
+                currentArr[id] = inputValue.value;
+                getInputButton.style.display = "block";
+                editButton.style.display = "none";
+                refreshItems();
+            }
+            editButton.addEventListener("click", afterClick);
+        }
+        refreshItems();
+    </script>
+</body>
+
+</html>
